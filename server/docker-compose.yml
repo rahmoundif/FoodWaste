@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: foodwaste-db
+    environment:
+      POSTGRES_USER: ${DB_USER:-foodwaste}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-oliver}
+      POSTGRES_DB: ${DB_NAME:-foodwaste_dev}
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-foodwaste}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev  # Use dev stage for hot reload
+    container_name: foodwaste-server
+    ports:
+      - "30000:30000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://${DB_USER:-foodwaste}:${DB_PASSWORD:-password}@db:5432/${DB_NAME:-foodwaste_dev}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  db_data:
