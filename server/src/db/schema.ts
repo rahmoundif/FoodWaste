@@ -1,24 +1,33 @@
-import { pgTable, serial, text, timestamp, boolean, integer} from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  boolean,
+  integer,
+} from "drizzle-orm/pg-core";
+import { user } from "./auth-schema";
 
-export const users = pgTable("users", {
+export const profile = pgTable("profile", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").unique().notNull(),
-  password: text("password").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
   admin: boolean("admin").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-
-export const list= pgTable("list", {
+export const list = pgTable("list", {
   id: serial("id").primaryKey(),
-  userId: serial("user_id").references(() => users.id),
+  userId: serial("user_id").references(() => profile.id),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const list_recipe = pgTable("list_recipe", {
   list_id: serial("list_id").references(() => list.id),
-  recipe_id: serial("recipe_id").notNull().references(() => recipe.id),
+  recipe_id: serial("recipe_id")
+    .notNull()
+    .references(() => recipe.id),
   number_of_servings: integer("number_of_servings").notNull(),
 });
 
@@ -26,14 +35,20 @@ export const ingredient = pgTable("ingredient", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   picture: text("picture"),
-  id_type_ingredient: integer("id_type_ingredient").references(() => type_ingredient.id),
+  id_type_ingredient: integer("id_type_ingredient").references(
+    () => type_ingredient.id
+  ),
 });
 
 export const recipe_ingredient = pgTable("recipe_ingredient", {
-  recipe_id: serial("recipe_id").notNull().references(() => recipe.id),
+  recipe_id: serial("recipe_id")
+    .notNull()
+    .references(() => recipe.id),
   ingredient_id: serial("ingredient_id").references(() => ingredient.id),
   quantity: integer("quantity").notNull(),
-  unit: integer("unit").notNull().references(() => unit.id),
+  unit: integer("unit")
+    .notNull()
+    .references(() => unit.id),
 });
 
 export const recipe = pgTable("recipe", {
@@ -44,8 +59,12 @@ export const recipe = pgTable("recipe", {
   kcal: integer("kcal"),
   difficulty: text("difficulty"),
   time_preparation: integer("time_preparation"),
-  id_category: integer("id_category").notNull().references(() => category.id),
-  id_diet: integer("id_diet").notNull().references(() => diet.id),
+  id_category: integer("id_category")
+    .notNull()
+    .references(() => category.id),
+  id_diet: integer("id_diet")
+    .notNull()
+    .references(() => diet.id),
   step1: text("step1").notNull(),
   step2: text("step2"),
   step3: text("step3"),
@@ -57,8 +76,12 @@ export const recipe = pgTable("recipe", {
 });
 
 export const recipe_ustensil = pgTable("recipe_ustensil", {
-  recipe_id: serial("recipe_id").notNull().references(() => recipe.id),
-  ustensil_id: serial("ustensil_id").notNull().references(() => ustensil.id)  ,
+  recipe_id: serial("recipe_id")
+    .notNull()
+    .references(() => recipe.id),
+  ustensil_id: serial("ustensil_id")
+    .notNull()
+    .references(() => ustensil.id),
 });
 
 export const ustensil = pgTable("ustensil", {
@@ -86,4 +109,12 @@ export const diet = pgTable("diet", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   gluten: boolean("gluten"),
+});
+
+export const action = pgTable("action", {
+  user_id: serial("user_id").references(() => profile.id),
+  recipe_id: serial("recipe_id").references(() => recipe.id),
+  rate: integer("rate"),
+  is_favorite: boolean("is_favorite").default(false),
+  comment: text("comment"),
 });
