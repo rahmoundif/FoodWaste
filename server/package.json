@@ -1,12 +1,18 @@
 {
   "name": "server",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "drizzle:push": "drizzle-kit push",
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "drizzle:pull": "drizzle-kit pull"
   },
   "dependencies": {
+    "@types/pg": "^8.16.0",
     "drizzle-orm": "^0.45.1",
+    "drizzle-zod": "^0.8.3",
     "hono": "^4.11.3",
-    "postgres": "^3.4.8",
+    "pg": "^8.16.3",
     "zod": "^4.3.5"
   },
   "devDependencies": {
