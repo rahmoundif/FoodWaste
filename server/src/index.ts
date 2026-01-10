@@ -1,10 +1,9 @@
 import app from "./app";
 
-app.get("/", (c) => {
-  return c.text("Check");
-});
+const port = 3000;
+console.log(`Server is running on http://localhost:${port}`);
 
 Bun.serve({
-  port: 3000,
   fetch: app.fetch,
+  port
 });
