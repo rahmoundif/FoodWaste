@@ -2,12 +2,14 @@
 import { pinoLogger } from "hono-pino";
 import  pino  from "pino";
 import pretty from "pino-pretty";
+import env from "../middlewares/env";
 
-
-export function pLogger() {
+export function PLogger() {
   return pinoLogger({
-    pino: pino(pretty()),
-    http:{
+    pino: pino({
+        level: env.LOG_LEVEL || "info",
+    },env.NODE_ENV === "production" ? undefined : pretty() ),
+    http:{  
         reqId: ()=> crypto.randomUUID(),
     }
   });

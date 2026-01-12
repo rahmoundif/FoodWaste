@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { auth } from "../lib/auth";
-import type { AuthType } from "../lib/create-app";
+import type { AuthType } from "@/lib/types";
 import { db } from "../db";
 import { profile } from "../db/schema";
 
@@ -15,7 +15,7 @@ router.post("/auth/sign-up/email", async (c) => {
 
   if (response.status === 200) {
 
-    const data = await response.clone().json();
+    const data = await response.clone().json() as AuthType["Variables"];
 
     if (data.user) {
       await db

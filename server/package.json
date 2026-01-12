@@ -1,14 +1,21 @@
 {
   "name": "server",
+  "version": "1.0.0",
+  "type":"module",
   "scripts": {
     "dev": "bun run --hot src/app.ts",
     "drizzle:push": "drizzle-kit push",
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:migrate": "drizzle-kit migrate",
-    "drizzle:pull": "drizzle-kit pull"
+    "drizzle:pull": "drizzle-kit pull",
+    "drizzle:studio": "drizzle-kit studio --host localhost",
+    "biome:format": "bunx biome format --write",
+    "biome:lint": "bunx biome lint --write",
+    "biome:check": "bunx biome check --write"
   },
   "dependencies": {
     "@hono/zod-openapi": "^1.2.0",
+    "@scalar/hono-api-reference": "^0.9.32",
     "@types/pg": "^8.16.0",
     "better-auth": "^1.4.10",
     "drizzle-orm": "^0.45.1",

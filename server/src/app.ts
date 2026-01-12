@@ -1,31 +1,32 @@
-import { OpenAPIHono } from "@hono/zod-openapi";
-import auth from "./routes/auth-route";
-import { profileRoute } from "./routes/profile-route";
-import userRoute from "./routes/user-route";
-import notFound from "stoker/middlewares/not-found";
-import { onError } from "stoker/middlewares";
-import { pLogger } from "./middlewares/pino-logger";
+import createApp from "@/lib/create-app";
+import auth from "@/routes/auth-route";
+import { profileRoute } from "@/routes/profile-route";
+import userRoute from "@/routes/user-route";
+import ConfigApi from "./lib/configure-api";
+import index from "@/routes/index-route";
 
-const app = new OpenAPIHono();
-app.use(pLogger());
-const routes = [auth] as const;
 
+const app = createApp();
+const routes = [
+  index
+]
+ConfigApi(app);
 routes.forEach((route) => {
-  app.basePath("/api").route("/", route);
+  app.route("/", route);
 });
-
-
-
-app.get("error", (c) => {
-  c.status(422)
-  throw new Error("Dammit!");
-}),
-
-app.onError(onError);
-app.notFound(notFound);
-
+// Root route
 app.get("/", (c) => c.json({ message: "Bienvenue sur l'API FoodWaste!" }));
+
+// API routes
+
+app.basePath("/connexion").route("/", auth);
 app.route("/profile", profileRoute);
 app.route("/users", userRoute);
+
+// Test error route
+app.get("/error", (c) => {
+  c.var.logger.debug("Generating an error for testing purposes");
+  throw new Error("Dammit!");
+});
 
 export default app;
