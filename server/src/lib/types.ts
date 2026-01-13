@@ -1,6 +1,6 @@
 import type { PinoLogger } from "hono-pino";
 import type { auth } from "@/lib/auth";
-import { OpenAPIHono } from "@hono/zod-openapi";
+import type { RouteHandler, RouteConfig, OpenAPIHono } from "@hono/zod-openapi";
 
 export interface AppBindings{
   Variables: {
@@ -16,3 +16,5 @@ export type AuthType = {
 };
 
 export type AppAPI = OpenAPIHono<AppBindings>;
+
+export type AppRouteHandler<R extends RouteConfig> = RouteHandler<R, AppBindings>;

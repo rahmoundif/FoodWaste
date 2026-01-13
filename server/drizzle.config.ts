@@ -1,11 +1,12 @@
 import { defineConfig } from "drizzle-kit";
+import env from "@/middlewares/env";
 
 export default defineConfig({
   dialect: "postgresql",
   schema: ["./src/db/schema.ts", "./src/db/auth-schema.ts"],
-  out: "./src/db/drizzle",
+  out: "./src/db/migrations",
   dbCredentials: {
     url:
-      process.env.DATABASE_URL!
+      env.DATABASE_URL,
   },
 });

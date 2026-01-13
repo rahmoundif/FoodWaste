@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -91,3 +92,10 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export const selectUserSchema = createSelectSchema(user); 
+export const insertUserSchema = createInsertSchema(user).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});

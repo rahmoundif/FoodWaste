@@ -7,6 +7,7 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const profile = pgTable("profile", {
   id: serial("id").primaryKey(),
@@ -117,4 +118,17 @@ export const action = pgTable("action", {
   rate: integer("rate"),
   is_favorite: boolean("is_favorite").default(false),
   comment: text("comment"),
+});
+
+export const selectProfileSchema = createSelectSchema(profile);
+export const insertProfileSchema = createInsertSchema(
+  profile, 
+//   {
+//   name : schema => schema.name.min(8).max(20)
+// }
+)
+
+.omit({
+  id: true,
+  createdAt: true,
 });

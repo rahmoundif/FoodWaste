@@ -1,28 +1,25 @@
 import { createRouter } from "@/lib/create-app";
 import { createRoute, z } from "@hono/zod-openapi";
+import { jsonContent } from "stoker/openapi/helpers";
+import * as httpsStatusCodes  from "stoker/http-status-codes";
+import { createMessageObjectSchema } from "stoker/openapi/schemas";
 
 const router = createRouter()
 .openapi(createRoute({
+    tags: ["Index"],
     method: "get",
     path: "/",
     responses: {
-        200: {
-            content: {
-                "application/json": {
-                schema: z.object({
-                    message: z.string(),
-                }),
-            },
-        },
-        description: "API Index",
-},
-    }
-
-})
-, (c) => {
+        [httpsStatusCodes.OK]: jsonContent(
+                 createMessageObjectSchema("WasteFood Api"),
+        "WF Index",
+            ),
+    },
+    }),
+(c) => {
     return c.json({ 
-        message: "Task API" 
-    });
+        message: "WF api" 
+    }, httpsStatusCodes.OK);
 }
 );
 
