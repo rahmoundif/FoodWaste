@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -31,7 +32,7 @@ export const session = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },
-  (table) => [index("session_userId_idx").on(table.userId)],
+  (table) => [index("session_userId_idx").on(table.userId)]
 );
 
 export const account = pgTable(
@@ -55,7 +56,7 @@ export const account = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("account_userId_idx").on(table.userId)],
+  (table) => [index("account_userId_idx").on(table.userId)]
 );
 
 export const verification = pgTable(
@@ -71,7 +72,7 @@ export const verification = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("verification_identifier_idx").on(table.identifier)],
+  (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -93,9 +94,23 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const selectUserSchema = createSelectSchema(user); 
-export const insertUserSchema = createInsertSchema(user).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const selectUserSchema = createSelectSchema(user).extend({
+  image: z.string().nullable().optional(),
 });
+export const insertUserSchema = createInsertSchema(user)
+  .required({
+    name: true,
+    email: true,
+  })
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+    emailVerified: true,
+    image: true,
+  })
+  .extend({
+    name : z.string().min(1, "Name is required"),
+    email: z.email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+  });

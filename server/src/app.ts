@@ -1,17 +1,15 @@
 import createApp from "@/lib/create-app";
-import auth from "@/routes/auth/auth.routes";
-import userRoute from "@/routes/user/user.routes";
+import auth from "@/routes/auth/auth.index";
 import ConfigApi from "./lib/configure-api";
 import index from "@/routes/index-route";
-import tasks from "@/routes/tasks/tasks.index";
 import profile from "@/routes/profile/profile.index";
 
 const app = createApp();
 
 const routes = [
   index,
-  tasks,
   profile,
+  auth,
 ];
 
 
@@ -22,7 +20,7 @@ routes.forEach((route) => {
 
 app.basePath("/connexion").route("/", auth);
 // app.route("/profile", profile);
-app.route("/users", userRoute);
+// app.route("/users", userRoute);
 
 // Test error route
 app.get("/error", (c) => {
