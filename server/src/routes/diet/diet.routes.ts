@@ -7,15 +7,15 @@ import { selectDietSchema } from "@/db/schema";
 const tags = ["Public - Diet"];
 
 export const diet = createRoute({
-    path: "/diet",
-    method: "get",
-    tags,
-    responses: {
-        [httpsStatusCodes.OK]: jsonContent(
-            z.array(selectDietSchema),
-            "List of diets"
-        ),
-    },
+	path: "/diet",
+	method: "get",
+	tags,
+	responses: {
+		[httpsStatusCodes.OK]: jsonContent(
+			z.array(selectDietSchema),
+			"List of diets",
+		),
+	},
 });
 
 export type Diet = typeof diet;

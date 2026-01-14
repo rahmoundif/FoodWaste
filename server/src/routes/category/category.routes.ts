@@ -6,15 +6,15 @@ import { selectCategorySchema } from "@/db/schema";
 const tags = ["Public - Category"];
 
 export const category = createRoute({
-  path: "/category",
-  method: "get",
-  tags,
-  responses: {
-    [httpsStatusCodes.OK]: jsonContent(
-      z.array(selectCategorySchema),
-      "List of categories"
-    ),
-  },
+	path: "/category",
+	method: "get",
+	tags,
+	responses: {
+		[httpsStatusCodes.OK]: jsonContent(
+			z.array(selectCategorySchema),
+			"List of categories",
+		),
+	},
 });
 
 export type Category = typeof category;
