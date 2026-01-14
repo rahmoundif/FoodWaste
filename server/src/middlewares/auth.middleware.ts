@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
-import type { AuthType } from "@/lib/types";
 import type { Role } from "@/db/schema";
 import { createMiddleware } from "hono/factory";
 import * as httpsStatusCodes from "stoker/http-status-codes";
+import { AuthType } from "@/lib/types";
 
 export const authMiddleware = createMiddleware<AuthType>(async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });

@@ -58,7 +58,7 @@ export default async function ConfigApi(app: AppAPI) {
       },
       tags: [
         ...(ApiSpec.tags || []),
-        { name: "Authentication", description: "Better Auth endpoints" },
+        { name: "Authentication", description: "Better-Auth endpoints" },
       ],
     };
 
