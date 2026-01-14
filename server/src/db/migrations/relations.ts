@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { list, listRecipe, recipe, user, profile, typeIngredient, ingredient, recipeIngredient, unit, recipeUstensil, ustensil, category, diet, action, account, session } from "./schema";
+import { list, listRecipe, recipe, user, typeIngredient, ingredient, recipeIngredient, unit, recipeUstensil, ustensil, category, diet, account, session, action } from "./schema";
 
 export const listRecipeRelations = relations(listRecipe, ({one}) => ({
 	list: one(list, {
@@ -14,9 +14,9 @@ export const listRecipeRelations = relations(listRecipe, ({one}) => ({
 
 export const listRelations = relations(list, ({one, many}) => ({
 	listRecipes: many(listRecipe),
-	profile: one(profile, {
+	user: one(user, {
 		fields: [list.userId],
-		references: [profile.id]
+		references: [user.id]
 	}),
 }));
 
@@ -35,19 +35,11 @@ export const recipeRelations = relations(recipe, ({one, many}) => ({
 	actions: many(action),
 }));
 
-export const profileRelations = relations(profile, ({one, many}) => ({
-	user: one(user, {
-		fields: [profile.userId],
-		references: [user.id]
-	}),
-	lists: many(list),
-	actions: many(action),
-}));
-
 export const userRelations = relations(user, ({many}) => ({
-	profiles: many(profile),
+	lists: many(list),
 	accounts: many(account),
 	sessions: many(session),
+	actions: many(action),
 }));
 
 export const ingredientRelations = relations(ingredient, ({one, many}) => ({
@@ -104,17 +96,6 @@ export const dietRelations = relations(diet, ({many}) => ({
 	recipes: many(recipe),
 }));
 
-export const actionRelations = relations(action, ({one}) => ({
-	recipe: one(recipe, {
-		fields: [action.recipeId],
-		references: [recipe.id]
-	}),
-	profile: one(profile, {
-		fields: [action.userId],
-		references: [profile.id]
-	}),
-}));
-
 export const accountRelations = relations(account, ({one}) => ({
 	user: one(user, {
 		fields: [account.userId],
@@ -125,6 +106,17 @@ export const accountRelations = relations(account, ({one}) => ({
 export const sessionRelations = relations(session, ({one}) => ({
 	user: one(user, {
 		fields: [session.userId],
+		references: [user.id]
+	}),
+}));
+
+export const actionRelations = relations(action, ({one}) => ({
+	recipe: one(recipe, {
+		fields: [action.recipeId],
+		references: [recipe.id]
+	}),
+	user: one(user, {
+		fields: [action.userId],
 		references: [user.id]
 	}),
 }));

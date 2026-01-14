@@ -1,28 +1,21 @@
 import createApp from "@/lib/create-app";
-import auth from "@/routes/auth/auth.index";
 import ConfigApi from "./lib/configure-api";
 import index from "@/routes/index-route";
-import profile from "@/routes/profile/profile.index";
+import { auth } from "./lib/auth";
 
 const app = createApp();
 
-const routes = [
-  index,
-  profile,
-  auth,
-];
+const routes = [index];
 
-
-ConfigApi(app);
+await ConfigApi(app);
 routes.forEach((route) => {
   app.route("/", route);
 });
 
-app.basePath("/connexion").route("/", auth);
-// app.route("/profile", profile);
-// app.route("/users", userRoute);
+app.on(["POST", "GET"], "/api/auth/**", (c) => {
+  return auth.handler(c.req.raw);
+});
 
-// Test error route
 app.get("/error", (c) => {
   c.var.logger.debug("Generating an error for testing purposes");
   throw new Error("Dammit!");
