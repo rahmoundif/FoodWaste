@@ -8,6 +8,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import z from "zod";
 
 export const list = pgTable("list", {
   id: serial("id").primaryKey(),
@@ -30,6 +31,27 @@ export const ingredient = pgTable("ingredient", {
   id_type_ingredient: integer("id_type_ingredient").references(
     () => type_ingredient.id
   ),
+});
+
+export const selectIngredientSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  picture: z.string().nullable(),
+  id_type_ingredient: z.number().int().nullable(),
+});
+
+export const insertIngredientSchema = z.object({
+  name: z.string(),
+  picture: z.string().nullable(),
+  id_type_ingredient: z.number().int().nullable(),
+});
+
+export const existingIngredientSchema = z.object({
+  name: z.string(),
+});
+
+export const deleteIngredientSchema = z.object({
+  id: z.number().int(),
 });
 
 export const recipe_ingredient = pgTable("recipe_ingredient", {
@@ -82,6 +104,21 @@ export const ustensil = pgTable("ustensil", {
   picture: text("picture"),
 });
 
+export const selectUstensilSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  picture: z.string().nullable(),
+});
+
+export const insertUstensilSchema = z.object({
+  name: z.string(),
+  picture: z.string().nullable(),
+});
+
+export const deleteUstensilSchema = z.object({
+  id: z.number().int(),
+});
+
 export const unit = pgTable("unit", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -97,10 +134,21 @@ export const category = pgTable("category", {
   name: text("name").notNull(),
 });
 
+export const selectCategorySchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+});
+
 export const diet = pgTable("diet", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   gluten: boolean("gluten"),
+});
+
+export const selectDietSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  gluten: z.boolean().nullable(),
 });
 
 export const action = pgTable("action", {
