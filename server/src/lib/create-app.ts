@@ -5,6 +5,7 @@ import { PLogger } from "@/middlewares/pino-logger";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import type { AppBindings } from "@/lib/types";
 import  { defaultHook} from "stoker/openapi";
+import { authMiddleware } from "@/middlewares/auth.middleware";
 
 
   export function createRouter() {
@@ -17,6 +18,7 @@ import  { defaultHook} from "stoker/openapi";
 
 export default function createApp() {
   const app = createRouter();
+  app.use(authMiddleware); 
   app.use(PLogger());
   app.use(serveEmojiFavicon("🍔"));
   app.onError(onError);

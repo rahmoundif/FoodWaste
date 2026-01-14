@@ -1,22 +1,21 @@
-import { insertProfileSchema, selectProfileSchema } from "@/db/schema";
-import { createRoute, z } from "@hono/zod-openapi";
-import * as httpsStatusCodes from "stoker/http-status-codes";
-import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
-import { createErrorSchema } from "stoker/openapi/schemas";
+// import { createRoute, z } from "@hono/zod-openapi";
+// import * as httpsStatusCodes from "stoker/http-status-codes";
+// import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
+// import { createErrorSchema } from "stoker/openapi/schemas";
 
-const tags = ["Profile"];
+// const tags = ["Profile"];
 
-export const profile = createRoute({
-  path: "/profile",
-  method: "get",
-  tags,
-  responses: {
-    [httpsStatusCodes.OK]: jsonContent(
-      z.array(selectProfileSchema),
-      "List of profiles"
-    ),
-  },
-});
+// export const profile = createRoute({
+//   path: "/profile",
+//   method: "get",
+//   tags,
+//   responses: {
+//     [httpsStatusCodes.OK]: jsonContent(
+//       z.array(selectProfileSchema),
+//       "List of profiles"
+//     ),
+//   },
+// });
 
 
 // export const createProfile = createRoute({
@@ -35,5 +34,5 @@ export const profile = createRoute({
 //   },
 // });
 
-export type Profile = typeof profile;
+// export type Profile = typeof profile;
 // export type CreateProfile = typeof createProfile;

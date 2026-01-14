@@ -3,7 +3,7 @@ import env from "@/middlewares/env";
 
 export default defineConfig({
   dialect: "postgresql",
-  schema: ["./src/db/schema.ts", "./src/db/auth-schema.ts"],
+  schema: ["./src/db/schema.ts"],
   out: "./src/db/migrations",
   dbCredentials: {
     url:

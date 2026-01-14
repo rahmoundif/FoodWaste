@@ -1,4 +1,4 @@
-import { pgTable, foreignKey, serial, integer, timestamp, boolean, text, index, unique } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, serial, integer, text, timestamp, boolean, unique, index } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -20,17 +20,16 @@ export const listRecipe = pgTable("list_recipe", {
 		}),
 ]);
 
-export const profile = pgTable("profile", {
+export const list = pgTable("list", {
 	id: serial().primaryKey().notNull(),
+	userId: text("user_id"),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-	admin: boolean().default(false),
-	userId: text("user_id").notNull(),
 }, (table) => [
 	foreignKey({
 			columns: [table.userId],
 			foreignColumns: [user.id],
-			name: "profile_user_id_user_id_fk"
-		}).onDelete("cascade"),
+			name: "list_user_id_user_id_fk"
+		}),
 ]);
 
 export const ingredient = pgTable("ingredient", {
@@ -43,18 +42,6 @@ export const ingredient = pgTable("ingredient", {
 			columns: [table.idTypeIngredient],
 			foreignColumns: [typeIngredient.id],
 			name: "ingredient_id_type_ingredient_type_ingredient_id_fk"
-		}),
-]);
-
-export const list = pgTable("list", {
-	id: serial().primaryKey().notNull(),
-	userId: serial("user_id").notNull(),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-}, (table) => [
-	foreignKey({
-			columns: [table.userId],
-			foreignColumns: [profile.id],
-			name: "list_user_id_profile_id_fk"
 		}),
 ]);
 
@@ -155,23 +142,17 @@ export const recipe = pgTable("recipe", {
 		}),
 ]);
 
-export const action = pgTable("action", {
-	userId: serial("user_id").notNull(),
-	recipeId: serial("recipe_id").notNull(),
-	rate: integer(),
-	isFavorite: boolean("is_favorite").default(false),
-	comment: text(),
+export const user = pgTable("user", {
+	id: text().primaryKey().notNull(),
+	name: text().notNull(),
+	email: text().notNull(),
+	emailVerified: boolean("email_verified").default(false).notNull(),
+	image: text(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+	role: text().default('user').notNull(),
 }, (table) => [
-	foreignKey({
-			columns: [table.recipeId],
-			foreignColumns: [recipe.id],
-			name: "action_recipe_id_recipe_id_fk"
-		}),
-	foreignKey({
-			columns: [table.userId],
-			foreignColumns: [profile.id],
-			name: "action_user_id_profile_id_fk"
-		}),
+	unique("user_email_unique").on(table.email),
 ]);
 
 export const verification = pgTable("verification", {
@@ -183,18 +164,6 @@ export const verification = pgTable("verification", {
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
 	index("verification_identifier_idx").using("btree", table.identifier.asc().nullsLast().op("text_ops")),
-]);
-
-export const user = pgTable("user", {
-	id: text().primaryKey().notNull(),
-	name: text().notNull(),
-	email: text().notNull(),
-	emailVerified: boolean("email_verified").default(false).notNull(),
-	image: text(),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	unique("user_email_unique").on(table.email),
 ]);
 
 export const account = pgTable("account", {
@@ -237,4 +206,23 @@ export const session = pgTable("session", {
 			name: "session_user_id_user_id_fk"
 		}).onDelete("cascade"),
 	unique("session_token_unique").on(table.token),
+]);
+
+export const action = pgTable("action", {
+	userId: text("user_id"),
+	recipeId: serial("recipe_id").notNull(),
+	rate: integer(),
+	isFavorite: boolean("is_favorite").default(false),
+	comment: text(),
+}, (table) => [
+	foreignKey({
+			columns: [table.recipeId],
+			foreignColumns: [recipe.id],
+			name: "action_recipe_id_recipe_id_fk"
+		}),
+	foreignKey({
+			columns: [table.userId],
+			foreignColumns: [user.id],
+			name: "action_user_id_user_id_fk"
+		}),
 ]);
