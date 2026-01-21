@@ -58,44 +58,6 @@ Coded on Fedora Linux with KDE Plasma 43 desktop environment using VS Code.
 
 - **PostgreSQL**: Robust, open-source relational database known for reliability and advanced features. Provides ACID compliance, excellent performance, and strong data integrity—ideal for managing food inventory and user data in a production environment.
 
-## Project Structure
-
-```
-FoodWaste/
-├── client/           # React + TypeScript frontend
-│   ├── src/
-│   ├── public/
-│   └── vite.config.ts
-└── server/           # Node.js + TypeScript backend
-    ├── src/
-    ├── db/          # Database schema (Drizzle)
-    └── Dockerfile
-```
-
-### Installation
-
-1. **Start the backend and database:**
-
-```bash
-cd server
-docker compose up -d
-```
-
-2. **Install frontend dependencies:**
-
-```bash
-cd client
-bun i
-```
-
-3. **Start the development server:**
-
-```bash
-bun dev
-```
-
-The application will be available at `http://localhost:5173`
-
 ## Development
 
 Each part of the stack can be developed independently:
